@@ -1,7 +1,12 @@
 class TranslationController < ApplicationController
   def translate
-    translation = translate2Pirate params[:english]
-    render :json => {pirate: translation}, :callback => params[:callback]
+    pirate = translate2Pirate params[:english]
+    render :json => {pirate: pirate}, :callback => params[:callback]
+  end
+
+  def translation
+    pirate = translate2Pirate params[:english]
+    render :json => {pirate: pirate}, :callback => params[:callback]
   end
 
   private

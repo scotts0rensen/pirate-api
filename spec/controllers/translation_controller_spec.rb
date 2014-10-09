@@ -14,5 +14,19 @@ describe TranslationController do
       response.body.should eq "cb({\"pirate\":\"How are ye wench?\"})"
     end
   end
+
+  describe "#translation" do
+    it "should have correct body" do
+      get :translation, {english: "Hi Jacob.", callback: "cb"}
+      response.should be_ok
+      response.body.should eq "cb({\"pirate\":\"Ahoy Jacob.\"})"
+    end
+
+    it "should have correct body" do
+      get :translation, {english: "How are you woman?", callback: "cb"}
+      response.should be_ok
+      response.body.should eq "cb({\"pirate\":\"How are ye wench?\"})"
+    end
+  end
 end
 
