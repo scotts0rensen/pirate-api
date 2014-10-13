@@ -1,26 +1,38 @@
 class TranslationController < ApplicationController
   def translate
-    pirate = translate2Pirate params[:english]
-    render :json => {pirate: pirate}, :callback => params[:callback]
+    t = translateEnglish( params[:english], params[:language] || "pirate")
+    render :json => t, :callback => params[:callback]
   end
 
   def translation
-    pirate = translate2Pirate params[:english]
-    render :json => {pirate: pirate}, :callback => params[:callback]
+    t = translateEnglish( params[:english], params[:language] || "pirate")
+    render :json => t, :callback => params[:callback]
+  end
+
+  def translateEnglish english, language
+    if language == "pirate"
+      translate2Pirate english
+    elsif language == "piglatin"
+      translate2PigLatin english
+    elsif language == "dug"
+      translate2Dug english
+    else
+      {error: "invalid language: '#{language}'"}
+    end
   end
 
   def translate2Pirate english
     response = HTTParty.get( URI::escape "http://www.pir.to/api/translate?english=#{english}" )
-    response.body
+    {pirate: response.body}
   end
 
   def translate2PigLatin english
     # credit:  http://codereview.stackexchange.com/questions/40189/pig-latin-translator-in-ruby-and-rspec
-    english.gsub!(/\w+/) { |word| pig(word) }
+    {piglatin: english.gsub!(/\w+/) { |word| pig(word) } }
   end
 
   def translate2Dug english
-    english.split.first(5).join(" ") + ".... SQUIRREL!"
+    {dug: english.split.first(5).join(" ") + ".... SQUIRREL!"}
   end
 
   private
