@@ -11,11 +11,13 @@ class TranslationController < ApplicationController
 
   def translateEnglish english, language
     if language == "pirate"
-      translate2Pirate english
+      {pirate: Pirate.new.translate(english)}
+    if language == "yoda"
+      {yoda: Yoda.new.translate(english)}
     elsif language == "piglatin"
-      translate2PigLatin english
+      {piglatin: Piglatin.new.translate(english)}
     elsif language == "dug"
-      translate2Dug english
+      {dug: Dug.new.translate(english)}
     else
       {error: "invalid language: '#{language}'"}
     end
