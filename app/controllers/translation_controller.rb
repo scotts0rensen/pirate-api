@@ -15,24 +15,31 @@ class TranslationController < ApplicationController
   end
 
   def translate2PigLatin english
-    english.split.collect { |w| pig(w) }.join(" ")
+    english.gsub!(/\w+/) { |word| pig(word) }
   end
 
   private
 
   def pig(word)
-    leadingCap = word =~ /^A-Z?/
-    word.downcase!
-    res = case word
-      #when vowels word + way
-      when /^aeiouy/
-        word+"way"
-      #otherwise, start from the back to concatanete with the first letter and add ay
-      when /^([^aeiouy]+)(.*)/
-        $2 + $1 + "ay"
-      else
-        word
-    end
-    leadingCap ? res.capitalize : res
+    replace_consonants_to_end_of_word(word)
+    append_n_to_last_letter_y(word) or append_y_to_last_letter_vowel(word)
+    recapitalize(word)
+    word += 'ay'
+  end
+
+  def replace_consonants_to_end_of_word(word)
+    word.concat(word.slice!(/^[^aeiou]*/i || ""))
+  end
+
+  def append_n_to_last_letter_y(word)
+    word.gsub!(/y$/, "yn")
+  end
+
+  def append_y_to_last_letter_vowel(word)
+    word.gsub!(/([aeiou])$/, '\1y')
+  end
+
+  def recapitalize(word)
+    word.capitalize! if word.downcase!
   end
 end
