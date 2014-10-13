@@ -15,7 +15,12 @@ class TranslationController < ApplicationController
   end
 
   def translate2PigLatin english
+    # credit:  http://codereview.stackexchange.com/questions/40189/pig-latin-translator-in-ruby-and-rspec
     english.gsub!(/\w+/) { |word| pig(word) }
+  end
+
+  def translate2Dug english
+    english.split.first(5).join(" ") + ".... SQUIRREL!"
   end
 
   private
